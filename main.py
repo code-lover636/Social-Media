@@ -25,7 +25,6 @@ styles = """
 
 st.markdown(styles, unsafe_allow_html=True)
 
-
 # Navbar
 def streamlit_menu():
     selected = option_menu(
@@ -50,5 +49,6 @@ match selected:
     case "Create Post":
         CreatePost.show_create_post(selected)
 
-# db.add_data("A113", "lost", "conan doyle")
-st.table(db.get_data())
+# db.create_db()
+# db.add_data("A114", "lost", "conan doyle")
+# st.table(db.get_data())
