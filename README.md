@@ -24,7 +24,7 @@ This project entails the development of a simplified social networking platform 
 
 # Installation and Setup
 
-1. Download and install Python and MySQL
+1. Download and install Python, MySQL and Git
 2. Clone this repository
    
    ```
