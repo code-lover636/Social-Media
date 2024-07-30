@@ -56,3 +56,11 @@ This project entails the development of a simplified social networking platform 
    ```
    streamlit run main.py
    ```
+
+# Screenshot of website
+
+![image](https://github.com/user-attachments/assets/b7995c24-1ad2-433a-9721-eb25d8e7973b)
+
+![image](https://github.com/user-attachments/assets/a5fb57c9-04b1-416f-a1a1-23dee5abcd17)
+
+
