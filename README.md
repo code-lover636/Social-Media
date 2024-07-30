@@ -30,6 +30,9 @@ This project entails the development of a simplified social networking platform 
    ```
    git clone https://github.com/code-lover636/Social-Media.git
    ```
+   ```
+   cd Social-Media
+   ```
 4. Creating virtual environment
    ```
    python -m venv <venv name>
