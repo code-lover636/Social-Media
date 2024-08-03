@@ -1,4 +1,4 @@
-# Overview
+![image](https://github.com/user-attachments/assets/08f2359a-d12c-4a49-beb3-e960b1cabc43)# Overview
 This project entails the development of a simplified social networking platform centered around the creation and sharing of user-generated content. The platform will facilitate user interaction through post creation, liking, and viewing. To ensure a seamless user experience, the platform will incorporate user registration and authentication mechanisms. The core functionalities will include posting, liking, and displaying content in a user-friendly format. The project will focus on building a robust foundation for understanding the underlying database management principles required for such platforms.
 
 # Features
@@ -57,13 +57,16 @@ This project entails the development of a simplified social networking platform 
    ```
 9. Run the following command and click the link (if not already opened)
    ```
-   streamlit run main.py
+   streamlit run Login.py
    ```
 
 # Screenshot of website
 
-![image](https://github.com/user-attachments/assets/b7995c24-1ad2-433a-9721-eb25d8e7973b)
+![image](https://github.com/user-attachments/assets/6c6e36ad-38fc-4aae-97ea-d20bd0bcac9f)
 
-![image](https://github.com/user-attachments/assets/a5fb57c9-04b1-416f-a1a1-23dee5abcd17)
+![image](https://github.com/user-attachments/assets/753edd9a-886e-4378-9dc3-defcbd6f6dc7)
 
+![image](https://github.com/user-attachments/assets/a18bce90-bdf9-4f5b-94a8-7c269bf2851d)
+
+![image](https://github.com/user-attachments/assets/91e5dce3-51f0-4d03-bd83-a4afc309465a)
 
