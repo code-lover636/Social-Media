@@ -1,4 +1,5 @@
-![image](https://github.com/user-attachments/assets/08f2359a-d12c-4a49-beb3-e960b1cabc43)# Overview
+![image](https://github.com/user-attachments/assets/08f2359a-d12c-4a49-beb3-e960b1cabc43)
+# Overview
 This project entails the development of a simplified social networking platform centered around the creation and sharing of user-generated content. The platform will facilitate user interaction through post creation, liking, and viewing. To ensure a seamless user experience, the platform will incorporate user registration and authentication mechanisms. The core functionalities will include posting, liking, and displaying content in a user-friendly format. The project will focus on building a robust foundation for understanding the underlying database management principles required for such platforms.
 
 # Features
