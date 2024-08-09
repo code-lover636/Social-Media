@@ -1,5 +1,6 @@
 import streamlit as st
 
+from database import add_post
 
 def show_create_post(selected):
     for i in range(1): st.write("")
@@ -16,4 +17,5 @@ def show_create_post(selected):
         if title == "" or description == "" or image_file is None:
             st.warning("All fields must be filled", icon="⚠️")
         else:
+            add_post(title, description, image_file)
             st.success('Posted', icon="✅")

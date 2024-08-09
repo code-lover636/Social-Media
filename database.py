@@ -6,63 +6,26 @@ load_dotenv()
 
 PASSWORD = os.getenv("MYSQL_DB_PASSWORD")
 
-def create_db():
-    # Create DB
-    mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD)
-    my_cursor = mydb.cursor()
-    my_cursor.execute("CREATE DATABASE IF NOT EXISTS LIBRARY_RECORDS")
-    mydb.commit()
+def register_user(user_name, user_email, password):
+    pass
 
-    #Create Table
-    mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database="LIBRARY_RECORDS")
-    my_cursor = mydb.cursor()
-    my_cursor.execute("CREATE TABLE IF NOT EXISTS books(BookID VARCHAR(50), BookName VARCHAR(20), Author VARCHAR(20) )")
-    mydb.commit()
+def login_user(user_email, password):
+    pass
 
-    my_cursor.close()
-    mydb.close() 
+def add_post(title, desc, image):
+    print(title, desc, image, sep="\n")
 
+def fetch_all_posts():
+    pass
 
-# For retrieving data from database
-def get_data():
-    mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database='LIBRARY_RECORDS')
-    my_cursor = mydb.cursor()
-    
-    my_cursor.execute("SELECT * FROM books")
-    data = my_cursor.fetchall()
-    my_cursor.close()
-    mydb.close()
-    return data
+def fetch_liked_posts(user_email):
+    pass
 
-# For adding a new book record to database
-def add_data(bookid,bookname,author):
-    mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database='LIBRARY_RECORDS')
-    my_cursor = mydb.cursor()
+def fetch_my_posts(user_email):
+    pass
 
-    my_cursor.execute("INSERT INTO books VALUES(%s, %s, %s)", (bookid,bookname,author))
-    mydb.commit()
-    
-    my_cursor.close()
-    mydb.close() 
+def like_a_post(postid, user_email):
+    pass
 
-# For deleting a book record permanently from database
-def del_data(bookid):
-    mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database='LIBRARY_RECORDS')
-    my_cursor = mydb.cursor()
-    
-    my_cursor.execute("DELETE FROM books WHERE BookID = %s",(bookid,))
-    mydb.commit()
-    my_cursor.close()
-    mydb.close()  
- 
-# For updating any field in particular record
-def update_data(field,newdata,bookid):
-    mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database='LIBRARY_RECORDS')
-    my_cursor = mydb.cursor()
-    
-    string = f"UPDATE books SET {field} = %s WHERE BookID = %s"
-    my_cursor.execute(string,(newdata,bookid))
-    mydb.commit()
-       
-    my_cursor.close()
-    mydb.close()
+def remove_like(postid, user_email):
+    pass

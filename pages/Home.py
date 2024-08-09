@@ -1,7 +1,6 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-import database as db
 from components import Feed, MyPosts, CreatePost, LikedPages
 
 
@@ -61,7 +60,3 @@ if st.session_state['access'] == "denied":
     st.switch_page("Login.py")
 else:
     main()
-
-# db.create_db()
-# db.add_data("A114", "lost", "conan doyle")
-# st.table(db.get_data())
