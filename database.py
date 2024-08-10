@@ -28,8 +28,27 @@ def register_user(first_name, second_name, email_id, password, dob):
     connection.close()
     return True
 
-def login_user(user_email, password):
-    pass
+def login_user(email_id, password):
+     connection = create_connection()
+    cursor = connection.cursor()
+
+
+    sql = "SELECT * FROM USERS WHERE EMAIL_ID = %s AND PASSWORD = %s"
+    cursor.execute(sql, (email_id, password))
+    user = cursor.fetchone()
+    
+    if user:
+        print("Login successful!")
+        cursor.close()
+        connection.close()
+        return True
+    else:
+        print("Invalid email or password.")
+        cursor.close()
+        connection.close()
+        return False
+
+
 
 def add_post(title, desc, image):
     print(title, desc, image, sep="\n")
