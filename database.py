@@ -12,7 +12,6 @@ def create_connection():
 def register_user(first_name, second_name, email_id, password, dob):
     connection = create_connection()
     cursor = connection.cursor()
-
     cursor.execute("SELECT * FROM USERS WHERE EMAIL_ID = %s", (email_id,))
     if cursor.fetchone():
         print("User already exists!")
@@ -32,7 +31,6 @@ def register_user(first_name, second_name, email_id, password, dob):
 def login_user(email_id, password):
     connection = create_connection()
     cursor = connection.cursor()
-
     sql = "SELECT * FROM USERS WHERE EMAIL_ID = %s AND PASSWORD = %s"
     cursor.execute(sql, (email_id, password))
     user = cursor.fetchone()
