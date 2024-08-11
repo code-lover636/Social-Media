@@ -10,7 +10,7 @@ def create_connection():
     return mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database="YOUR_DATABASE_NAME")
 
 def register_user(first_name, second_name, email_id, password, dob):
-    connection = create_connection()
+     connection = create_connection()
     cursor = connection.cursor()
     
     
