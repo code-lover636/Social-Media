@@ -35,7 +35,6 @@ def login_user(email_id, password):
     connection = create_connection()
     cursor = connection.cursor()
 
-
     sql = "SELECT * FROM USERS WHERE EMAIL_ID = %s AND PASSWORD = %s"
     cursor.execute(sql, (email_id, password))
     user = cursor.fetchone()
@@ -50,7 +49,6 @@ def login_user(email_id, password):
         cursor.close()
         connection.close()
         return False
-
 
 
 def add_post(title, desc, image):
