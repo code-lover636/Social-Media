@@ -32,7 +32,7 @@ def register_user(first_name, second_name, email_id, password, dob):
     return True
 
 def login_user(email_id, password):
-     connection = create_connection()
+    connection = create_connection()
     cursor = connection.cursor()
 
 
