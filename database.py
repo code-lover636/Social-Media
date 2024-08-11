@@ -12,20 +12,18 @@ def create_connection():
 def register_user(first_name, second_name, email_id, password, dob):
     connection = create_connection()
     cursor = connection.cursor()
-    
-    
+
     cursor.execute("SELECT * FROM USERS WHERE EMAIL_ID = %s", (email_id,))
     if cursor.fetchone():
         print("User already exists!")
         cursor.close()
         connection.close()
         return False
-    
-    
+
     sql = "INSERT INTO USERS (FIRST_NAME, SECOND_NAME, EMAIL_ID, PASSWORD, DOB) VALUES (%s, %s, %s, %s, %s)"
     cursor.execute(sql, (first_name, second_name, email_id, password, dob))
     connection.commit()
-    
+
     print("User registered successfully!")
     cursor.close()
     connection.close()
@@ -34,12 +32,11 @@ def register_user(first_name, second_name, email_id, password, dob):
 def login_user(email_id, password):
     connection = create_connection()
     cursor = connection.cursor()
-    
-    
+
     sql = "SELECT * FROM USERS WHERE EMAIL_ID = %s AND PASSWORD = %s"
     cursor.execute(sql, (email_id, password))
     user = cursor.fetchone()
-    
+
     if user:
         print("Login successful!")
         cursor.close()
@@ -50,7 +47,6 @@ def login_user(email_id, password):
         cursor.close()
         connection.close()
         return False
-
 
 def add_post(title, desc, image):
     print(title, desc, image, sep="\n")
