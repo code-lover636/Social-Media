@@ -6,11 +6,9 @@ load_dotenv()
 
 PASSWORD = os.getenv("MYSQL_DB_PASSWORD")
 
-def create_connection():
-    return mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database="YOUR_DATABASE_NAME")
 
 def register_user(first_name, second_name, email_id, password, dob):
-    connection = create_connection()
+    connection = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database="PIXEL")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM USERS WHERE EMAIL_ID = %s", (email_id,))
     if cursor.fetchone():
@@ -19,7 +17,7 @@ def register_user(first_name, second_name, email_id, password, dob):
         connection.close()
         return False
 
-    sql = "INSERT INTO USERS (FIRST_NAME, SECOND_NAME, EMAIL_ID, PASSWORD, DOB) VALUES (%s, %s, %s, %s, %s)"
+    sql = "INSERT INTO USERS (FIRST_NAME, SECOND_NAME, EMAIL_ID, PASSWORD, DOB) VALUES (%s, %s, %s, MD5(%s), %s)"
     cursor.execute(sql, (first_name, second_name, email_id, password, dob))
     connection.commit()
 
@@ -29,9 +27,9 @@ def register_user(first_name, second_name, email_id, password, dob):
     return True
 
 def login_user(email_id, password):
-    connection = create_connection()
+    connection = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database="PIXEL")
     cursor = connection.cursor()
-    sql = "SELECT * FROM USERS WHERE EMAIL_ID = %s AND PASSWORD = %s"
+    sql = "SELECT * FROM USERS WHERE EMAIL_ID = %s AND PASSWORD = MD5(%s)"
     cursor.execute(sql, (email_id, password))
     user = cursor.fetchone()
 
