@@ -10,7 +10,7 @@ def create_db():
     # Create DB
     mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD)
     my_cursor = mydb.cursor()
-    my_cursor.execute("CREATE DATABASE IF NOT EXISTS LIBRARY_RECORDS")
+    my_cursor.execute("CREATE DATABASE IF NOT EXISTS pixels")
     mydb.commit()
 
     #Create Table
@@ -28,7 +28,7 @@ def get_data():
     mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database='LIBRARY_RECORDS')
     my_cursor = mydb.cursor()
     
-    my_cursor.execute("SELECT * FROM books")
+    my_cursor.execute("SELECT * FROM reactions")
     data = my_cursor.fetchall()
     my_cursor.close()
     mydb.close()
@@ -36,7 +36,7 @@ def get_data():
 
 # For adding a new book record to database
 def add_data(bookid,bookname,author):
-    mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database='LIBRARY_RECORDS')
+    mydb = mysql.connector.connect(host='localhost', user='root', passwd=PASSWORD, database='pixels')
     my_cursor = mydb.cursor()
 
     my_cursor.execute("INSERT INTO books VALUES(%s, %s, %s)", (bookid,bookname,author))

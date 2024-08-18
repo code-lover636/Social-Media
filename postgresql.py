@@ -1,6 +1,7 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
+from psycopg2 import Error
 
 load_dotenv()
 
@@ -58,19 +59,101 @@ def fetch_all_posts():
 
 
 def fetch_liked_posts(user_email):
-    pass
+    try:
+        conn = psycopg2.connect(
+            host=POSTGRESQL_HOST,
+            user=POSTGRESQL_USER,
+            password=POSTGRESQL_PASSWORD,
+            database=POSTGRESQL_DB
+        )
+        cursor = conn.cursor()
+
+        sql = """
+        SELECT POSTS.POST_ID, POSTS.POST_TITLE, POSTS.POST_DESC 
+        FROM POSTS
+        JOIN REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID
+        WHERE REACTIONS.OWNER_EMAIL = %s
+        """
+        cursor.execute(sql, (user_email,))
+        liked_posts = cursor.fetchall()
+
+        for post in liked_posts:
+            print(f"Post ID: {post[0]}, Title: {post[1]}, Description: {post[2]}")
+
+        return liked_posts
+
+    except (Exception, Error) as err:
+        print(f"Error: {err}")
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+   
 
 
 def fetch_my_posts(user_email):
-    pass
+     pass
 
 
 def like_a_post(postid, user_email):
-    pass
+    try:
+        conn = psycopg2.connect(
+            host=POSTGRESQL_HOST,
+            user=POSTGRESQL_USER,
+            password=POSTGRESQL_PASSWORD,
+            database=POSTGRESQL_DB
+        )
+        cursor = conn.cursor()
+
+        sql = "INSERT INTO REACTIONS (POST_ID, OWNER_EMAIL) VALUES (%s, %s)"
+        values = (postid, user_email)
+
+        cursor.execute(sql, values)
+        conn.commit()
+
+        print(f"Post ID: {postid} liked by {user_email}")
+
+    except (Exception, Error) as err:
+        print(f"Error: {err}")
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
 
 
 def remove_like(postid, user_email):
-    pass
+    try:
+        conn = psycopg2.connect(
+            host=POSTGRESQL_HOST,
+            user=POSTGRESQL_USER,
+            password=POSTGRESQL_PASSWORD,
+            database=POSTGRESQL_DB
+        )
+        cursor = conn.cursor()
+        sql = "DELETE FROM REACTIONS WHERE POST_ID = %s AND OWNER_EMAIL = %s"
+        values = (postid, user_email)
+
+        cursor.execute(sql, values)
+        conn.commit()
+
+        print("Reaction deleted successfully")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 
 # def init_db():
 #     connection = psycopg2.connect(host=POSTGRESQL_HOST, user=POSTGRESQL_USER, password=POSTGRESQL_PASSWORD, database=POSTGRESQL_DB)
