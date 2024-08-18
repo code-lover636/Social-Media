@@ -1,6 +1,6 @@
 import streamlit as st
 
-from database import fetch_all_posts
+from postgresql import fetch_all_posts
 from components.Card import show_card
 
 

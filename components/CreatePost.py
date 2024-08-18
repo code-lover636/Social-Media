@@ -1,6 +1,6 @@
 import streamlit as st
 
-from database import add_post
+from postgresql import add_post
 
 def show_create_post(selected):
     for i in range(1): st.write("")

@@ -1,7 +1,7 @@
 import streamlit as st
 import datetime
 
-from database import register_user, login_user
+from postgresql import register_user, login_user
 
 
 def login_page():
@@ -49,7 +49,7 @@ def register_page():
         elif register_user(first_name, second_name, email, password, dob):
             return True
         else:
-            st.error("Cannot Login. Some error occured", icon="❌")
+            st.error("Cannot Login. Email Id already exists.", icon="❌")
     
     return False
     
