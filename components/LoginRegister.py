@@ -18,6 +18,8 @@ def login_page():
         if email == "" or password == "":
             st.warning("All fields must be filled", icon="⚠️")
         elif login_user(email, password):
+            if 'user_email' not in st.session_state:
+                st.session_state['user_email'] = email
             return True
         else:
             st.error("Invalid Email or Password", icon="❌")
@@ -47,6 +49,8 @@ def register_page():
         elif password != confirm_password:
             st.error("Passwords doesn't match", icon="❌")
         elif register_user(first_name, second_name, email, password, dob):
+            if 'user_email' not in st.session_state:
+                st.session_state['user_email'] = email
             return True
         else:
             st.error("Cannot Login. Email Id already exists.", icon="❌")

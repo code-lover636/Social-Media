@@ -30,6 +30,7 @@ st.markdown(styles, unsafe_allow_html=True)
 if 'access' not in st.session_state:
     st.session_state['access'] = 'denied'
 
+
 # Navbar
 def streamlit_menu():
     selected = option_menu(
@@ -47,13 +48,13 @@ def main():
 
     match selected:
         case "Feed":
-            Feed.show_feed(selected)
+            Feed.show_feed()
         case "My Posts":
-            MyPosts.show_my_posts(selected)
+            MyPosts.show_my_posts()
         case "Create Post":
-            CreatePost.show_create_post(selected)
+            CreatePost.show_create_post()
         case "Liked Pages":
-            LikedPages.show_liked_pages(selected)
+            LikedPages.show_liked_pages()
 
 
 if st.session_state['access'] == "denied":

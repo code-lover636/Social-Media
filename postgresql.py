@@ -50,12 +50,41 @@ def login_user(email_id, password):
         return False
 
 
-def add_post(title, desc, image):
-    print(title, desc, image, sep="\n")
+def add_post(title, desc, image, user_email, posted_time):
+    connection = psycopg2.connect(host=POSTGRESQL_HOST, user=POSTGRESQL_USER, password=POSTGRESQL_PASSWORD, database=POSTGRESQL_DB)
+    cursor = connection.cursor()
+    print(posted_time)
+    cursor.execute("INSERT INTO POSTS(owner_email, posted_time, post_title, post_desc, post_img) VALUES(%s, %s, %s, %s, %s)", (user_email, str(posted_time), title, desc, psycopg2.Binary(image) ))
+    connection.commit()
+
+    print("Posted successfully")
+    cursor.close()
+    connection.close()
 
 
 def fetch_all_posts():
-    pass
+    connection = psycopg2.connect(host=POSTGRESQL_HOST, user=POSTGRESQL_USER, password=POSTGRESQL_PASSWORD, database=POSTGRESQL_DB)
+    cursor = connection.cursor()
+    sql = "SELECT * FROM POSTS ORDER BY POSTED_TIME DESC"
+    cursor.execute(sql)
+    posts = cursor.fetchall()
+    return posts
+
+def isLiked(postid, user_email):
+    connection = psycopg2.connect(host=POSTGRESQL_HOST, user=POSTGRESQL_USER, password=POSTGRESQL_PASSWORD, database=POSTGRESQL_DB)
+    cursor = connection.cursor()
+    sql = """
+        SELECT POSTS.LIKE_COUNT
+        FROM POSTS
+        JOIN REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID
+        WHERE REACTIONS.OWNER_EMAIL = %s AND POSTS.POST_ID = %s
+        """
+    cursor.execute(sql, (user_email, postid))
+    posts = cursor.fetchone()
+    if not posts:
+        return False
+    else:
+        return True
 
 
 def fetch_liked_posts(user_email):
@@ -69,7 +98,7 @@ def fetch_liked_posts(user_email):
         cursor = conn.cursor()
 
         sql = """
-        SELECT POSTS.POST_ID, POSTS.POST_TITLE, POSTS.POST_DESC 
+        SELECT POSTS.POST_ID, POSTS.OWNER_EMAIL, POSTS.POSTED_TIME, POSTS.POST_TITLE, POSTS.POST_DESC, POSTS.LIKE_COUNT, POSTS.POST_IMG
         FROM POSTS
         JOIN REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID
         WHERE REACTIONS.OWNER_EMAIL = %s
@@ -95,7 +124,12 @@ def fetch_liked_posts(user_email):
 
 
 def fetch_my_posts(user_email):
-     pass
+    connection = psycopg2.connect(host=POSTGRESQL_HOST, user=POSTGRESQL_USER, password=POSTGRESQL_PASSWORD, database=POSTGRESQL_DB)
+    cursor = connection.cursor()
+    sql = "SELECT * FROM POSTS WHERE OWNER_EMAIL=%s ORDER BY POSTED_TIME DESC"
+    cursor.execute(sql, (user_email,))
+    posts = cursor.fetchall()
+    return posts
 
 
 def like_a_post(postid, user_email):
@@ -112,6 +146,7 @@ def like_a_post(postid, user_email):
         values = (postid, user_email)
 
         cursor.execute(sql, values)
+        cursor.execute("UPDATE POSTS SET LIKE_COUNT = LIKE_COUNT + 1 WHERE POST_ID = %s", (postid,))
         conn.commit()
 
         print(f"Post ID: {postid} liked by {user_email}")
@@ -141,6 +176,8 @@ def remove_like(postid, user_email):
         values = (postid, user_email)
 
         cursor.execute(sql, values)
+        cursor.execute("UPDATE POSTS SET LIKE_COUNT = LIKE_COUNT - 1 WHERE POST_ID = %s", (postid,))
+
         conn.commit()
 
         print("Reaction deleted successfully")

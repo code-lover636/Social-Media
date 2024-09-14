@@ -1,11 +1,12 @@
 import streamlit as st
+import time    
 
 from postgresql import add_post
 
-def show_create_post(selected):
-    for i in range(1): st.write("")
-    st.title(f"You have selected {selected}")
-    for i in range(3): st.write("")
+
+
+def show_create_post():
+    for _ in range(3): st.write("")
 
     with st.form('create post'):
         title = st.text_input("Post heading")
@@ -17,5 +18,6 @@ def show_create_post(selected):
         if title == "" or description == "" or image_file is None:
             st.warning("All fields must be filled", icon="⚠️")
         else:
-            add_post(title, description, image_file)
+            posted_time = time.strftime('%Y-%m-%d %H:%M:%S')
+            add_post(title, description, image_file.read(), st.session_state['user_email'], posted_time)
             st.success('Posted', icon="✅")
