@@ -20,7 +20,7 @@ const Home = () => {
 
   // Fetch functions
   const fetchFeed = () => {
-    fetch('http://127.0.0.1:8000/feed', {
+    fetch('https://social-media-u5pv.onrender.com/feed', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const Home = () => {
   };
 
   const fetchMyPosts = () => {
-    fetch('http://127.0.0.1:8000/myposts', {
+    fetch('https://social-media-u5pv.onrender.com/myposts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const Home = () => {
   };
 
   const fetchLikedPosts = () => {
-    fetch('http://127.0.0.1:8000/likedposts', {
+    fetch('https://social-media-u5pv.onrender.com/likedposts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
