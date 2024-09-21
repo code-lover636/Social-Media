@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;900&display=swap');
+
+:root{
+    --primary-font-color: #ff4165;
+}
+
+*{
+	margin:0;
+	padding:0;
+	box-sizing: border-box;
+    color: var(--primary-font-color);
+}
+
+.login-body{
+	display: grid;
+	place-content: center;
+	background-color: black;
+	height: 100vh;
+}
+
+.login-sec{
+	display: flex;
+	border-radius: 5px;
+	width: 800px;
+	height: 500px;
+	background-color: white;
+	overflow: hidden;
+	img{
+		width: 45%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.login-form{
+		width: 55%;
+		height: 100%;
+		flex-direction: column;
+		justify-content: space-evenly;
+		align-items: center;
+		padding: 0em 3em;
+        display: flex;
+		h1{
+			font-family: 'Jost', Helvetica, sans-serif;
+			font-weight: 800;
+            font-size: 2.5rem;
+		}
+		input{
+			border: none;
+			border-bottom: 1px solid black;
+			outline: none;
+			padding: 2px 5px;
+			width: 100%;
+            font-size: 1rem;
+		}
+		.submit{
+			padding: .6em 2em;
+			border: none;
+			border-radius: 3px;
+			font-size: .9rem;
+            font-weight: 800;
+			background-color: var(--primary-font-color);
+			color: white;
+			cursor: pointer;
+			align-self: flex-end;
+		}
+		small{
+			font-family: 'Jost', Helvetica, sans-serif;
+			font-weight: 300;
+            font-size: 1rem;
+            display: flex;
+            gap: 10px;
+            #login, #register{
+                color: blue;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+		}
+	}
+}

@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --pink: #ff4165;
+    --white: #ffffff;
+  }
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.welcome-body{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 4em;
+    background-color: var(--pink);
+}
+
+main h1{
+    font-family: 'Dancing Script', Helvetica, sans-serif;
+    color: white;
+    font-size: 7rem;
+    font-weight: 400;
+    letter-spacing: 24px;
+    text-align: center;
+    margin-bottom: 2.5em;
+}
+
+a{
+    color: black;
+    text-decoration: none;
+    background-color: white;
+    font-family: 'Jost', Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 5px 30px;
+}
+
+
