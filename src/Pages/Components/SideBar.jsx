@@ -11,7 +11,7 @@ const SideBar = ({setPage, Feed, MyPosts, LikedPosts, navSelect, setNavSelect}) 
         <div className="user-details">
           <img className="profile-pic" src={localStorage.getItem('image')} alt="profile-pic" />
           <h1 className="name">{localStorage.getItem('fname')}</h1>
-          <h1 className="handle">@{(localStorage.getItem('email')).toLowerCase()}</h1>
+          <h1 className="handle">@{`${(localStorage.getItem('fname')).toLowerCase()}${localStorage.getItem('lname').toLocaleLowerCase()}`}</h1>
         </div>
   
         <nav>

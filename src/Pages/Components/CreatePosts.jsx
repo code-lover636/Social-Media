@@ -28,7 +28,7 @@ const CreatePosts = ({setPage, reload, setReload, setNavSelect}) => {
     formData.append("owner_email", current_email);
   
     try {
-      const response = await fetch("http://0.0.0.0:8000/create", {
+      const response = await fetch("https://social-media-u5pv.onrender.com/create", {
         method: "POST",
         body: formData,
       });
