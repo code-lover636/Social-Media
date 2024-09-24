@@ -9,7 +9,7 @@ const SideBar = ({setPage, Feed, MyPosts, LikedPosts, navSelect, setNavSelect}) 
         </div>
   
         <div className="user-details">
-          <img className="profile-pic" src="https://play-lh.googleusercontent.com/_qUtBpMVsGY-CLPx2DreAENHAbr4KHwBGn2w_3jhGSzoRVFRKn0SXUaK0wXSU0SJ7A=w240-h480-rw" alt="profile-pic" />
+          <img className="profile-pic" src={localStorage.getItem('image')} alt="profile-pic" />
           <h1 className="name">{localStorage.getItem('fname')}</h1>
           <h1 className="handle">@{(localStorage.getItem('email')).toLowerCase()}</h1>
         </div>

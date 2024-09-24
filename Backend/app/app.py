@@ -42,7 +42,8 @@ async def login(data: MyLoginData):
             "Status": "Success",
             "valid": "Valid",
             "fname": name[0],
-            "lname": name[1]
+            "lname": name[1],
+            "image": name[2]
         }
     else:
         return {
@@ -57,12 +58,13 @@ class MyRegisterData(BaseModel):
     dob: str
     email: str
     password: str
+    image: UploadFile = File(...),
 
 @app.post("/register",tags=['Login'])
 async def register(data: MyRegisterData):
     text = data.json()
     text = json.loads(text)
-    if ps.register_user(text["fname"], text["lname"], text["email"], text["password"], text["dob"]):
+    if ps.register_user(text["fname"], text["lname"], text["email"], text["password"], text["dob"], text["image"]):
         return {
             "Status": "Success",
             "valid": "Valid"
@@ -77,7 +79,7 @@ async def register(data: MyRegisterData):
 class MyPostsData(BaseModel):
     current_email: str
 
-@app.post("/feed", response_model=List[Tuple[int, datetime, str, str, str, int, str, int]])
+@app.post("/feed", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]])
 async def get_feed(user_email: MyPostsData):
     user_email = user_email.json()
     user_email = json.loads(user_email)
@@ -89,7 +91,7 @@ async def get_feed(user_email: MyPostsData):
     return formatted_data
 
 
-@app.post("/myposts", response_model=List[Tuple[int, datetime, str, str, str, int, str, int]])
+@app.post("/myposts", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]])
 async def get_my_posts(current_email:MyPostsData):
     email = current_email.json()
     email = json.loads(email)["current_email"]
@@ -100,7 +102,7 @@ async def get_my_posts(current_email:MyPostsData):
     ]
     return formatted_data
 
-@app.post("/likedposts", response_model=List[Tuple[int, datetime, str, str, str, int, str, int]])
+@app.post("/likedposts", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]])
 async def get_liked_posts(current_email:MyPostsData):
     email = current_email.json()
     email = json.loads(email)["current_email"]

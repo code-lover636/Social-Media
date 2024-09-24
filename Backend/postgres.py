@@ -12,7 +12,7 @@ POSTGRESQL_PASSWORD = os.getenv("POSTGRESQL_PASSWORD")
 POSTGRESQL_USER = os.getenv("POSTGRESQL_USER")
 
 
-def register_user(first_name, second_name, email_id, password, dob):
+def register_user(first_name, second_name, email_id, password, dob, image):
     connection = psycopg2.connect(host=POSTGRESQL_HOST, user=POSTGRESQL_USER, password=POSTGRESQL_PASSWORD, database=POSTGRESQL_DB)
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM USERS WHERE EMAIL_ID = %s", (email_id,))
@@ -22,8 +22,8 @@ def register_user(first_name, second_name, email_id, password, dob):
         connection.close()
         return False
 
-    sql = "INSERT INTO USERS (FIRST_NAME, SECOND_NAME, EMAIL_ID, PASSWORD, DOB) VALUES (%s, %s, %s, MD5(%s), %s)"
-    cursor.execute(sql, (first_name, second_name, email_id, password, dob))
+    sql = "INSERT INTO USERS (FIRST_NAME, SECOND_NAME, EMAIL_ID, PASSWORD, DOB, PROFILE_PICTURE) VALUES (%s, %s, %s, MD5(%s), %s, %s)"
+    cursor.execute(sql, (first_name, second_name, email_id, password, dob, psycopg2.Binary(image)))
     connection.commit()
 
     print("User registered successfully!")
@@ -43,7 +43,7 @@ def login_user(email_id, password):
         print("Login successful!")
         cursor.close()
         connection.close()
-        return user[0], user[1]
+        return user[0], user[1], base64.b64encode(user[5]).decode('utf-8')
     else:
         print("Invalid email or password.")
         cursor.close()
@@ -65,20 +65,36 @@ def add_post(title, desc, image, user_email, posted_time):
 def fetch_all_posts(user_email):
     connection = psycopg2.connect(host=POSTGRESQL_HOST, user=POSTGRESQL_USER, password=POSTGRESQL_PASSWORD, database=POSTGRESQL_DB)
     cursor = connection.cursor()
-    sql = "SELECT * FROM POSTS LEFT OUTER JOIN REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID AND REACTIONS.OWNER_EMAIL = %s ORDER BY POSTS.POSTED_TIME DESC "
+    sql = """
+        SELECT 
+        POSTS.*, 
+        REACTIONS.*, 
+        USERS.FIRST_NAME, 
+        USERS.SECOND_NAME, 
+        USERS.PROFILE_PICTURE
+        FROM 
+            POSTS 
+        LEFT OUTER JOIN 
+            REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID AND REACTIONS.OWNER_EMAIL = %s 
+        LEFT OUTER JOIN 
+            USERS ON USERS.EMAIL_ID = POSTS.OWNER_EMAIL 
+        ORDER BY 
+            POSTS.POSTED_TIME DESC;
+    """
     cursor.execute(sql,  (user_email,))
     posts = cursor.fetchall()
 
     # Convert binary images to base64 strings if necessary
     formatted_posts = []
     for post in posts:
-        post_id, owner_email, posted_time, post_title, post_desc, like_count, post_img, rpostid, rownerid = post
+        post_id, owner_email, posted_time, post_title, post_desc, like_count, post_img, rpostid, rownerid, fname, lname, profile_pic = post
         if rpostid:
             liked = 1
         else:
             liked = 0
         post_img_base64 = base64.b64encode(post_img).decode('utf-8') if post_img else None
-        formatted_posts.append((post_id, posted_time, post_title, post_desc, owner_email, like_count, post_img_base64, liked))
+        profile_pic = base64.b64encode(profile_pic).decode('utf-8') if post_img else None
+        formatted_posts.append((post_id, posted_time, post_title, post_desc, owner_email, like_count, post_img_base64, liked, fname, lname, profile_pic))
     
     return formatted_posts
 
@@ -109,10 +125,19 @@ def fetch_liked_posts(user_email):
     cursor = conn.cursor()
 
     sql = """
-    SELECT POSTS.POST_ID, POSTS.OWNER_EMAIL, POSTS.POSTED_TIME, POSTS.POST_TITLE, POSTS.POST_DESC, POSTS.LIKE_COUNT, POSTS.POST_IMG
-    FROM POSTS
-    JOIN REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID
-    WHERE REACTIONS.OWNER_EMAIL = %s
+        SELECT 
+            POSTS.*,
+            USERS.FIRST_NAME, 
+            USERS.SECOND_NAME, 
+            USERS.PROFILE_PICTURE
+        FROM 
+            POSTS
+        JOIN 
+            REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID
+        JOIN 
+            USERS ON USERS.EMAIL_ID = POSTS.OWNER_EMAIL
+        WHERE 
+            REACTIONS.OWNER_EMAIL = %s;
     """
     cursor.execute(sql, (user_email,))
     posts = cursor.fetchall()
@@ -120,9 +145,10 @@ def fetch_liked_posts(user_email):
     # Convert binary images to base64 strings if necessary
     formatted_posts = []
     for post in posts:
-        post_id, owner_email, posted_time, post_title, post_desc, like_count, post_img = post
+        post_id, owner_email, posted_time, post_title, post_desc, like_count, post_img, fname, lname, profile_pic = post
         post_img_base64 = base64.b64encode(post_img).decode('utf-8') if post_img else None
-        formatted_posts.append((post_id, posted_time, post_title, post_desc, owner_email, like_count, post_img_base64, 1))
+        profile_pic = base64.b64encode(profile_pic).decode('utf-8') if post_img else None
+        formatted_posts.append((post_id, posted_time, post_title, post_desc, owner_email, like_count, post_img_base64, 1, fname, lname, profile_pic ))
 
     return formatted_posts
 
@@ -135,16 +161,34 @@ def fetch_liked_posts(user_email):
 def fetch_my_posts(user_email):
     connection = psycopg2.connect(host=POSTGRESQL_HOST, user=POSTGRESQL_USER, password=POSTGRESQL_PASSWORD, database=POSTGRESQL_DB)
     cursor = connection.cursor()
-    sql = "SELECT POSTS.*, CASE WHEN REACTIONS.POST_ID IS NOT NULL THEN 1 ELSE 0 END AS IS_LIKED FROM POSTS LEFT OUTER JOIN REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID AND REACTIONS.OWNER_EMAIL = %s WHERE POSTS.OWNER_EMAIL = %s ORDER BY POSTS.POSTED_TIME DESC"
+    sql = """
+        SELECT 
+            POSTS.*, 
+            CASE WHEN REACTIONS.POST_ID IS NOT NULL THEN 1 ELSE 0 END AS IS_LIKED, 
+            USERS.FIRST_NAME, 
+            USERS.SECOND_NAME, 
+            USERS.PROFILE_PICTURE
+        FROM 
+            POSTS 
+        LEFT OUTER JOIN 
+            REACTIONS ON POSTS.POST_ID = REACTIONS.POST_ID AND REACTIONS.OWNER_EMAIL = %s 
+        JOIN 
+            USERS ON USERS.EMAIL_ID = POSTS.OWNER_EMAIL 
+        WHERE 
+            POSTS.OWNER_EMAIL = %s 
+        ORDER BY 
+            POSTS.POSTED_TIME DESC;
+    """
     cursor.execute(sql, (user_email, user_email,))
     posts = cursor.fetchall()
 
     # Convert binary images to base64 strings if necessary
     formatted_posts = []
     for post in posts:
-        post_id, owner_email, posted_time, post_title, post_desc, like_count, post_img, liked = post
+        post_id, owner_email, posted_time, post_title, post_desc, like_count, post_img, liked, fname, lname, profile_pic  = post
         post_img_base64 = base64.b64encode(post_img).decode('utf-8') if post_img else None
-        formatted_posts.append((post_id, posted_time, post_title, post_desc, owner_email, like_count, post_img_base64, liked))
+        profile_pic = base64.b64encode(profile_pic).decode('utf-8') if post_img else None
+        formatted_posts.append((post_id, posted_time, post_title, post_desc, owner_email, like_count, post_img_base64, liked, fname, lname, profile_pic))
     
     return formatted_posts
 

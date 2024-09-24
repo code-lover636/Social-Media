@@ -5,7 +5,8 @@ const CreatePosts = ({setPage, reload, setReload, setNavSelect}) => {
   const [desc, setDesc] = useState("");
   const [image, setImage] = useState(null); // Change to null to better handle file input
   
-  const current_email = localStorage.getItem("email");
+  const current_email = localStorage.getItem('email');
+
   const validate = async (e) => {
     console.log("hello")
     e.preventDefault();
@@ -27,7 +28,7 @@ const CreatePosts = ({setPage, reload, setReload, setNavSelect}) => {
     formData.append("owner_email", current_email);
   
     try {
-      const response = await fetch("https://social-media-u5pv.onrender.com/create", {
+      const response = await fetch("http://0.0.0.0:8000/create", {
         method: "POST",
         body: formData,
       });
@@ -46,8 +47,6 @@ const CreatePosts = ({setPage, reload, setReload, setNavSelect}) => {
       console.error("Error posting data:", error);
       alert("There was an error creating the post. Please try again.");
     }
-
-    console.log("Post created:", { title, desc, image });
   };
 
   const handleFileChange = (e) => {

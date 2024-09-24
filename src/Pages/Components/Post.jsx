@@ -3,7 +3,7 @@ import { SuitHeart, SuitHeartFill } from 'react-bootstrap-icons';
 
 const Post = ({ post, reload, setReload }) => {
   const [liked, setLiked] = useState(post[7]); // Changed to boolean for clarity
-
+  console.log(post)
   const current_email = localStorage.getItem('email');
   const handleLikeToggle = () => {
     setLiked(!liked);
@@ -13,7 +13,7 @@ const Post = ({ post, reload, setReload }) => {
     else
       post[5] += 1
 
-    fetch('https://social-media-u5pv.onrender.com/likeapost', {
+    fetch('http://0.0.0.0:8000/likeapost', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,13 +44,13 @@ const Post = ({ post, reload, setReload }) => {
     <div className="post-container">
       <div className="owner-container">
         <img
-          src="https://play-lh.googleusercontent.com/_qUtBpMVsGY-CLPx2DreAENHAbr4KHwBGn2w_3jhGSzoRVFRKn0SXUaK0wXSU0SJ7A=w240-h480-rw"
-          alt=""
+          src={`data:image/png;base64,${post[10]}`}
+          alt="profile picture"
           className="profile-pic"
         />
         <div className="name-grp">
-          <h2 className="owner-name">John Wick</h2>
-          <h2 className="owner-handle">{post[4]}</h2>
+          <h2 className="owner-name">{`${post[8]} ${post[9]}`}</h2>
+          <h2 className="owner-handle">@{`${post[8].toLowerCase()}${post[9].toLowerCase()}`}</h2>
         </div>
       </div>
       <img

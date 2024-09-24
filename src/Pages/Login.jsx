@@ -7,7 +7,7 @@ const LoginValidation = (e, email, password) => {
     alert("All fields should be filled")
   }
   else{
-    fetch('https://social-media-u5pv.onrender.com/login', {
+    fetch('http://0.0.0.0:8000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,7 +27,8 @@ const LoginValidation = (e, email, password) => {
             localStorage.setItem('email', email);
             localStorage.setItem('fname', res.fname);
             localStorage.setItem('lname', res.lname);
-            window.location.replace("/home")
+            localStorage.setItem('image', `data:image/png;base64,${res.image}`);
+            window.location.replace("/home");
         }
         
       })
@@ -36,42 +37,62 @@ const LoginValidation = (e, email, password) => {
   
 }
 
-const RegisterValidation = (e, fname, lname, dob, email, password, confirmPassword) => {
+const RegisterValidation = (e, fname, lname, dob, email, password, confirmPassword, image) => {
   e.preventDefault();
-  if(email=="" || password=="" || fname=="" || lname=="" || confirmPassword=="" || dob==""){
-    alert("All fields should be filled")
+  
+  // Validation for empty fields
+  if (email === "" || password === "" || fname === "" || lname === "" || confirmPassword === "" || dob === "") {
+    alert("All fields should be filled");
+    return;
   }
-  else if(password !== confirmPassword){
-    alert("Passwords doesn't match");
+  
+  // Validation for password match
+  if (password !== confirmPassword) {
+    alert("Passwords don't match");
+    return;
   }
-  else{
+
+  // Convert the image file to Base64 before sending it or storing it
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    const base64Image = reader.result; // Base64 string of the image
+    
+    // Send data to the backend
     fetch('https://social-media-u5pv.onrender.com/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': "*"
       },
-      body: JSON.stringify({fname, lname, dob, email, password}),
-      })
-      .then(res => res.json())
-      .then(res=>{
-        if(res.Status !== "Success"){
-          alert("Login Failed");
-        }
-        else if(res.valid == "Invalid"){
-          alert("Email Id Already Exists");
-        }
-        else{
-            localStorage.setItem('email', email);
-            localStorage.setItem('fname', fname);
-            localStorage.setItem('lname', lname);
-            window.location.replace("/home")
-        }
-        
-      })
-      .catch(error => {console.error('Error:', error); });
+      body: JSON.stringify({ fname, lname, dob, email, password, image: base64Image }),
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.Status !== "Success") {
+        alert("Registration Failed");
+      } else if (res.valid === "Invalid") {
+        alert("Email ID already exists");
+      } else {
+        // Store data in localStorage
+        localStorage.setItem('email', email);
+        localStorage.setItem('fname', fname);
+        localStorage.setItem('lname', lname);
+        localStorage.setItem('image', base64Image);  // Store Base64 image in localStorage
+        window.location.replace("/home");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  };
+
+  if (image) {
+    reader.readAsDataURL(image); // Convert image file to Base64
+  } else {
+    alert("Please upload an image");
   }
-}
+};
+
 
 const LoginSection = ({setCurrentPage}) => {
   const [email, setEmail] = useState("");
@@ -98,6 +119,23 @@ const RegisterSection = ({setCurrentPage}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [image, setImage] = useState(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Please upload a valid image file (JPEG, PNG, GIF).");
+      return;
+    }
+    // if (file.size > 3 * 1024 * 1024) {
+    //   // 2MB limit
+    //   alert("File size exceeds 3MB. Please upload a smaller image.");
+    //   return;
+    // }
+    setImage(file);
+  };
+
   return(
     <form className="login-form register-form">
       <h1 className="heading">Register</h1>
@@ -108,8 +146,8 @@ const RegisterSection = ({setCurrentPage}) => {
       <input type="password" placeholder="Password" className="name" required onChange={(e)=>{setPassword(e.target.value)}}/>
       <input type="password" placeholder="Confirm Password" className="name" required onChange={(e)=>{setConfirmPassword(e.target.value)}}/>
       <label htmlFor="file">Upload profile picture</label>
-      <input className="file-upload" type="file" name="file" accept="image/*" placeholder="Upload profile picture"/>
-      <button className="submit" type="submit" onClick={e => RegisterValidation(e, fname, lname, dob, email, password, confirmPassword)}>Register</button>
+      <input className="file-upload" type="file" name="file" accept="image/*" placeholder="Upload profile picture" onChange={handleFileChange} />
+      <button className="submit" type="submit" onClick={e => RegisterValidation(e, fname, lname, dob, email, password, confirmPassword, image)}>Register</button>
       <small>Already a memeber? <div id="login" onClick={()=>{
         setCurrentPage(1);
       }}>Log in</div> </small>
