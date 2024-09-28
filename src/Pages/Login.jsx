@@ -7,7 +7,7 @@ const LoginValidation = (e, email, password) => {
     alert("All fields should be filled")
   }
   else{
-    fetch('https://social-media-u5pv.onrender.com/login', {
+    fetch('http://0.0.0.0:8000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const RegisterValidation = (e, fname, lname, dob, email, password, confirmPasswo
     const base64Image = reader.result; // Base64 string of the image
     
     // Send data to the backend
-    fetch('https://social-media-u5pv.onrender.com/register', {
+    fetch('http://0.0.0.0:8000/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

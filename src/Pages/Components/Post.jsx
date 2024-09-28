@@ -13,7 +13,7 @@ const Post = ({ post, reload, setReload }) => {
     else
       post[5] += 1
 
-    fetch('https://social-media-u5pv.onrender.com/likeapost', {
+    fetch('http://0.0.0.0:8000/likeapost', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
