@@ -1,5 +1,9 @@
-import '../styles/login.css'
 import { useState } from 'react';
+
+
+import '../styles/login.css'
+import loginBg from '../assets/login.png'
+
 
 const LoginValidation = (e, email, password) => {
   e.preventDefault();
@@ -56,6 +60,7 @@ const RegisterValidation = (e, fname, lname, dob, email, password, confirmPasswo
   const reader = new FileReader();
   reader.onloadend = () => {
     const base64Image = reader.result; // Base64 string of the image
+    console.log(base64Image);
     
     // Send data to the backend
     fetch('http://0.0.0.0:8000/register', {
@@ -64,7 +69,7 @@ const RegisterValidation = (e, fname, lname, dob, email, password, confirmPasswo
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': "*"
       },
-      body: JSON.stringify({ fname, lname, dob, email, password, image: base64Image }),
+      body: JSON.stringify({ fname, lname, dob, email, password, image: base64Image}),
     })
     .then(res => res.json())
     .then(res => {
@@ -162,7 +167,7 @@ const Login = ({}) => {
   return (
     <div className="login-body">
       <section className="login-sec">
-            <img src="https://t3.ftcdn.net/jpg/03/88/34/96/360_F_388349679_22fgWbI5QO72gPO7LqZHF08v0Cyvb37U.jpg" alt="side-image" />
+            <img src={loginBg} alt="side-image" />
             {currentPage?<LoginSection setCurrentPage={setCurrentPage} />: <RegisterSection setCurrentPage={setCurrentPage} />}            
       </section>
     </div>

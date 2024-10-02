@@ -24,6 +24,17 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
+
+.no-post{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    .no-post-msg{
+        font-size: 4rem;
+        color:#00000029;
+    }
+}
   
   @keyframes spin {
     0% { transform: rotate(0deg); }

@@ -1,9 +1,10 @@
 import '../styles/welcome.css'
+// import bgImg from '../assets/bg.jpg'
 
 const Welcome = () => {
   return (
     <div className="welcome-body">
-            {/* <img src="https://4kwallpapers.com/images/wallpapers/dark-background-abstract-background-network-3d-background-3840x2160-8324.png" alt="bg" class="bg" /> */}
+            <img src="https://4kwallpapers.com/images/wallpapers/dark-background-abstract-background-network-3d-background-3840x2160-8324.png" alt="bg" class="bg" />
             <main>
                 <h1>
                     PIXEL

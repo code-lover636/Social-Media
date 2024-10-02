@@ -10,7 +10,9 @@ const MyPosts = ({reload, setReload, myPostList}) => {
           <Post key={index} post={post} reload={reload} setReload={setReload} /> 
         ))
       ) : (
-        <div className="loader"></div> 
+        <div className="no-post">
+          <h2 className='no-post-msg'>No Posts Found</h2>
+        </div> 
       )}
     </main>
   );

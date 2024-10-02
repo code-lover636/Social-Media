@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import List, Tuple
 from datetime import datetime
 import json
+import base64
 
 import postgres as ps
 
@@ -58,13 +59,14 @@ class MyRegisterData(BaseModel):
     dob: str
     email: str
     password: str
-    image: UploadFile = File(...),
+    image: str
 
 @app.post("/register",tags=['Login'])
 async def register(data: MyRegisterData):
     text = data.json()
     text = json.loads(text)
-    if ps.register_user(text["fname"], text["lname"], text["email"], text["password"], text["dob"], text["image"]):
+    image = base64.b64decode(data.image.split(",")[1]) 
+    if ps.register_user(text["fname"], text["lname"], text["email"], text["password"], text["dob"], image):
         return {
             "Status": "Success",
             "valid": "Valid"
@@ -79,7 +81,7 @@ async def register(data: MyRegisterData):
 class MyPostsData(BaseModel):
     current_email: str
 
-@app.post("/feed", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]])
+@app.post("/feed", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]], tags=['Post Related'])
 async def get_feed(user_email: MyPostsData):
     user_email = user_email.json()
     user_email = json.loads(user_email)
@@ -91,7 +93,7 @@ async def get_feed(user_email: MyPostsData):
     return formatted_data
 
 
-@app.post("/myposts", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]])
+@app.post("/myposts", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]], tags=['Post Related'])
 async def get_my_posts(current_email:MyPostsData):
     email = current_email.json()
     email = json.loads(email)["current_email"]
@@ -102,7 +104,7 @@ async def get_my_posts(current_email:MyPostsData):
     ]
     return formatted_data
 
-@app.post("/likedposts", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]])
+@app.post("/likedposts", response_model=List[Tuple[int, datetime, str, str, str, int, str, int, str, str, str]], tags=['Post Related'])
 async def get_liked_posts(current_email:MyPostsData):
     email = current_email.json()
     email = json.loads(email)["current_email"]
@@ -116,17 +118,18 @@ async def get_liked_posts(current_email:MyPostsData):
 class MyLikeData(BaseModel):
     email: str
     post_id: int
+    liked: int
 
-@app.post("/likeapost")
+@app.post("/likeapost", tags=['Post Related'])
 async def get_liked_posts(data:MyLikeData):
     data = data.json()
     data = json.loads(data)
-    liked = 0
-    if ps.isLiked(data["email"], data["post_id"]):
+    liked = False
+    if data['liked']:
         ps.remove_like(data["post_id"], data["email"])
     else:
         ps.like_a_post(data["post_id"], data["email"])
-        liked = 1
+        liked = True
     
     return {
         "Status": "Success",
@@ -134,7 +137,7 @@ async def get_liked_posts(data:MyLikeData):
     }
 
 # Create Posts
-@app.post("/create")
+@app.post("/create", tags=['Post Related'])
 async def create_post(
     title: str = Form(...),
     desc: str = Form(...),

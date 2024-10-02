@@ -8,7 +8,7 @@ const CreatePosts = ({setPage, reload, setReload, setNavSelect}) => {
   const current_email = localStorage.getItem('email');
 
   const validate = async (e) => {
-    console.log("hello")
+
     e.preventDefault();
 
     if (!title || !desc || !image) {
@@ -16,8 +16,8 @@ const CreatePosts = ({setPage, reload, setReload, setNavSelect}) => {
       return;
     }
     
-    if (desc.length > 200) {
-      alert("Description cannot exceed 200 characters.");
+    if (desc.length > 2000) {
+      alert("Description cannot exceed 2000 characters.");
       return;
     }
 
@@ -77,9 +77,8 @@ const CreatePosts = ({setPage, reload, setReload, setNavSelect}) => {
       <textarea
         name="desc"
         id="desc"
-        placeholder='Description max(200 characters)'
+        placeholder='Description max(2000 characters)'
         required
-        maxLength={200} // Limit to 200 characters
         onChange={(e) => setDesc(e.target.value)}
       ></textarea>
       <input

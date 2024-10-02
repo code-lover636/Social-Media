@@ -9,9 +9,10 @@ const Home = () => {
   const [reload, setReload] = useState(false);
   const [navSelect, setNavSelect] = useState(0);
 
-  if (!localStorage.getItem('email')) {
+  if (localStorage.getItem('email') == null) {
     window.location.replace("/login");
   }
+  
 
   const current_email = localStorage.getItem('email');
   const [postList, setPostList] = useState([]);
@@ -35,6 +36,7 @@ const Home = () => {
       })
       .then(data => {
         setPostList(data);
+        
       })
       .catch(error => {
         console.error('Error:', error);
@@ -111,7 +113,7 @@ const Home = () => {
   return (
     <div className="home-body">
       <button className="create-post" onClick={()=>{setPage('createPosts')}}>+ Create Post</button>
-      <SideBar setPage={setPage} Feed={Feed} MyPosts={MyPosts} LikedPosts={LikedPosts} navSelect={navSelect} setNavSelect={setNavSelect}/>
+      {current_email ? <SideBar setPage={setPage} Feed={Feed} MyPosts={MyPosts} LikedPosts={LikedPosts} navSelect={navSelect} setNavSelect={setNavSelect}/> : <></>}
       {renderComponent()}
     </div>
   )
